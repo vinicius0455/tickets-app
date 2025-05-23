@@ -13,6 +13,9 @@ class TicketController extends Controller
     public function index()
     {
         //
+        $tickets=Ticket::all();
+        return view('tickets.index')->with('tickets',$tickets);
+
     }
 
     /**
@@ -21,6 +24,7 @@ class TicketController extends Controller
     public function create()
     {
         //
+        return view('tickets.create');
     }
 
     /**
@@ -29,6 +33,17 @@ class TicketController extends Controller
     public function store(Request $request)
     {
         //
+        $validatedData=$request->validate([
+            'title'=>'required',
+            'description'=>'required',
+            'status'=>'required',
+        ]);
+        $ticket=new Ticket();
+        $ticket->title=$validatedData['title'];
+        $ticket->title=$validatedData['description'];
+        $ticket->title=$validatedData['status'];
+        $ticket->save();
+        return redirect()->route('tickets.index');
     }
 
     /**
