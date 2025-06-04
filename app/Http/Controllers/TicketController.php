@@ -40,8 +40,8 @@ class TicketController extends Controller
         ]);
         $ticket=new Ticket();
         $ticket->title=$validatedData['title'];
-        $ticket->title=$validatedData['description'];
-        $ticket->title=$validatedData['status'];
+        $ticket->description=$validatedData['description'];
+        $ticket->status=$validatedData['status']; 
         $ticket->save();
         return redirect()->route('tickets.index');
     }
@@ -59,7 +59,7 @@ class TicketController extends Controller
      */
     public function edit(Ticket $ticket)
     {
-        //
+        return view('tickets.edit')->with('tickets',$ticket);
     }
 
     /**

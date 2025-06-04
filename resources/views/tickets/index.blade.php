@@ -10,7 +10,7 @@
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900">
                     <div class="flex items-center justify-end">
-                        <a class="bg-blue text-blue py-6 px-3" href="{{route('tickets.create')}}">Add ticket</a>
+                        <a class="text-blue-900 py-6 px-3" href="{{route('tickets.create')}}">Add ticket</a>
                     </div>
                     <table class="table-auto w-full">
                         <thead>
@@ -42,7 +42,7 @@
                                     {{$ticket->created_at}}
                                 </td>
                                  <td>
-                                    Actions
+                                    <a class="text-blue-900 py-6 px-3" href="{{route('tickets.edit',$ticket->id)}}">Edit</a>
                                 </td>
                             </tr>
                             @endforeach
