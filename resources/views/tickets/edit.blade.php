@@ -1,34 +1,62 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Tickets') }}
+        <h2 class="text-2xl font-bold text-gray-800 leading-tight">
+            Edit Tickets
         </h2>
     </x-slot>
 
     <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 text-gray-900">
-                    <h3 class="font-bold">Edit {{$tickets->title}}</h3>
-                    <form action="{{route('tickets.store')}}" method="POST">
-                        @csrf
+        <div class="max-w-3xl mx-auto sm:px-6 lg:px-8">
+            <div class="bg-white shadow-md rounded-lg p-6">
+                @if ($errors->any())
+                    <div class="mb-4">
+                        <ul class="list-disc list-inside text-sm text-red-600">
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
 
-                        <label for="title">Title</label>
-                        <input type="text" name="title" id="title" class="border rounded w-full py-2 px-3" value="{{$tickets->title}}" required>
-                        <label for="description">Description</label>
-                        <textarea name="description" id="description" class="border rounded w-full py-2 px-3" value="{{$tickets->description}}" required></textarea>
-                        <label for="status">Status</label>
-                        <select name="status" id="status" class="border rounded w-full py-2 px-3"> 
-                            <option value="open">Open</option>
-                            <option value="closed">Closed</option>
-                            <option value="pending">Pending</option>
+                <form action="{{ route('tickets.update', $ticket->id) }}" method="POST" class="space-y-6">
+                    @csrf
+                    @method('PUT')
+
+                    <div>
+                        <label for="title" class="block text-sm font-medium text-gray-700">Title</label>
+                        <input type="text" name="title" id="title" value="{{ $ticket->title }}"
+                               class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                               required>
+                    </div>
+
+                    <div>
+                        <label for="description" class="block text-sm font-medium text-gray-700">Description</label>
+                        <textarea name="description" id="description" rows="4"
+                                  class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                                  required>{{ $ticket->description }}</textarea>
+                    </div>
+
+                    <div>
+                        <label for="status" class="block text-sm font-medium text-gray-700">Status</label>
+                        <select name="status" id="status"
+                                class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                                required>
+                            <option value="open" {{ $ticket->status === 'open' ? 'selected' : '' }}>Open</option>
+                            <option value="closed" {{ $ticket->status === 'closed' ? 'selected' : '' }}>Closed</option>
                         </select>
-                        <div class="mt-6 flex items-center justify-end gap-4">
-                            <a href="{{route('tickets.index')}}">Cancel</a>
-                            <button type="submit">Save</button>
-                        </div>
-                    </form>
-                </div>
+                    </div>
+
+                    <div class="flex justify-end">
+                        <a href="{{ route('tickets.index') }}"
+                           class="mr-4 inline-flex items-center px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300">
+                            Cancel
+                        </a>
+                        <button type="submit"
+                                class="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+                            Atualizar Ticket
+                        </button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
