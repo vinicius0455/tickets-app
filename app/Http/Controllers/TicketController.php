@@ -59,7 +59,8 @@ class TicketController extends Controller
      */
     public function edit(Ticket $ticket)
     {
-        return view('tickets.edit')->with('tickets',$ticket);
+        return view('tickets.edit')->with('ticket',$ticket);
+
     }
 
     /**
@@ -67,7 +68,16 @@ class TicketController extends Controller
      */
     public function update(Request $request, Ticket $ticket)
     {
-        //
+        $validatedData=$request->validate([
+            'title'=>'required',
+            'description'=>'required',
+            'status'=>'required',
+        ]);
+        $ticket->title=$validatedData['title'];
+        $ticket->description=$validatedData['description'];
+        $ticket->status=$validatedData['status']; 
+        $ticket->save();
+        return redirect()->route('tickets.index');
     }
 
     /**
@@ -76,5 +86,7 @@ class TicketController extends Controller
     public function destroy(Ticket $ticket)
     {
         //
+        $ticket->delete();
+        return redirect()->route('tickets.index');
     }
 }

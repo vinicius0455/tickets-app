@@ -8,16 +8,6 @@
      <div class="py-12">
         <div class="max-w-3xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white shadow-md rounded-lg p-6">
-                @if ($errors->any())
-                    <div class="mb-4">
-                        <ul class="list-disc list-inside text-sm text-red-600">
-                            @foreach ($errors->all() as $error)
-                                <li>{{ $error }}</li>
-                            @endforeach
-                        </ul>
-                    </div>
-                @endif
-
                 <form action="{{ route('tickets.store') }}" method="POST" class="space-y-6">
                     @csrf
 
@@ -43,6 +33,7 @@
                             <option value="open">Open</option>
                             <option value="closed">Closed</option>
                             <option value="pending">Pending</option>
+                            <option value="resolved">Resolved</option>
                         </select>
                     </div>
 

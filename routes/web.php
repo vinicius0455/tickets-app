@@ -21,9 +21,9 @@ Route::controller(TicketController::class)->prefix('tickets')->name('tickets')->
     Route::get('/','index')->name('.index');
     Route::get('/create','create')->name('.create');
     Route::post('/store','store')->name('.store');
-    Route::get('/{tickets}/edit','edit')->name('.edit');
-    Route::put('/{tickets}/update','update')->name('.update');
-    Route::delete('/{tickets}/destroy','destroy')->name('.update');
+    Route::get('/{ticket}/edit','edit')->name('.edit');
+    Route::put('/{ticket}/update','update')->name('.update');
+    Route::delete('/{ticket}/destroy','destroy')->name('.destroy');
 });
 
 require __DIR__.'/auth.php';
