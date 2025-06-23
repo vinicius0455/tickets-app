@@ -18,6 +18,7 @@
                                 <th class="px-6 py-3 text-left text-sm font-semibold uppercase tracking-wider">Ticket ID</th>
                                 <th class="px-6 py-3 text-left text-sm font-semibold uppercase tracking-wider">Title</th>
                                 <th class="px-6 py-3 text-left text-sm font-semibold uppercase tracking-wider">Description</th>
+                                <th class="px-6 py-3 text-left text-sm font-semibold uppercase tracking-wider">Endpoint</th>
                                 <th class="px-6 py-3 text-left text-sm font-semibold uppercase tracking-wider">Status</th>
                                 <th class="px-6 py-3 text-left text-sm font-semibold uppercase tracking-wider">Created At</th>
                                 <th class="px-6 py-3 text-left text-sm font-semibold uppercase tracking-wider">Actions</th>
@@ -29,6 +30,14 @@
                                 <td class="px-6 py-4">{{ $ticket->id }}</td>
                                 <td class="px-6 py-4">{{ $ticket->title }}</td>
                                 <td class="px-6 py-4">{{ $ticket->description }}</td>
+                                 <td class="px-6 py-4">
+                                    @if($ticket->endpoint)
+                                    <a target="_blank" href="{{ route('devices.show', $ticket->endpoint) }}"
+                                        class="text-blue-600 hover:underline">{{ $ticket->endpoint }}</a>
+                                    @else
+                                    <span class="text-gray-500">none</span>
+                                    @endif
+                                </td>
                                 <td class="px-6 py-4">
                                     <span class="inline-block px-2 py-1 text-xs font-medium rounded
                     {{ $ticket->status === 'open' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">

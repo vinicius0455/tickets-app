@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\DevicesController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TicketController;
 use Illuminate\Support\Facades\Route;
@@ -24,6 +25,11 @@ Route::controller(TicketController::class)->prefix('tickets')->name('tickets')->
     Route::get('/{ticket}/edit','edit')->name('.edit');
     Route::put('/{ticket}/update','update')->name('.update');
     Route::delete('/{ticket}/destroy','destroy')->name('.destroy');
+});
+
+Route::controller(DevicesController::class)->prefix('devices')->name('devices')->middleware('auth')->group(function(){
+    Route::get('/','index')->name('.index');
+    Route::get('/{id}','show')->name('.show');
 });
 
 require __DIR__.'/auth.php';

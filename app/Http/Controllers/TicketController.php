@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Ticket;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Cache;
 
 class TicketController extends Controller
 {
@@ -13,9 +15,8 @@ class TicketController extends Controller
     public function index()
     {
         //
-        $tickets=Ticket::all();
-        return view('tickets.index')->with('tickets',$tickets);
-
+        $tickets = Ticket::all();
+        return view('tickets.index')->with('tickets', $tickets);
     }
 
     /**
@@ -24,7 +25,8 @@ class TicketController extends Controller
     public function create()
     {
         //
-        return view('tickets.create');
+        $devices = $this->getDevices();
+        return view('tickets.create', compact('devices'));
     }
 
     /**
@@ -33,15 +35,17 @@ class TicketController extends Controller
     public function store(Request $request)
     {
         //
-        $validatedData=$request->validate([
-            'title'=>'required',
-            'description'=>'required',
-            'status'=>'required',
+        $validatedData = $request->validate([
+            'title' => 'required',
+            'description' => 'required',
+            'endpoint' => 'required',
+            'status' => 'required',
         ]);
-        $ticket=new Ticket();
-        $ticket->title=$validatedData['title'];
-        $ticket->description=$validatedData['description'];
-        $ticket->status=$validatedData['status']; 
+        $ticket = new Ticket();
+        $ticket->title = $validatedData['title'];
+        $ticket->description = $validatedData['description'];
+        $ticket->endpoint = $validatedData['endpoint'];
+        $ticket->status = $validatedData['status'];
         $ticket->save();
         return redirect()->route('tickets.index');
     }
@@ -59,8 +63,8 @@ class TicketController extends Controller
      */
     public function edit(Ticket $ticket)
     {
-        return view('tickets.edit')->with('ticket',$ticket);
-
+        $devices = $this->getDevices();
+        return view('tickets.edit', compact('devices'))->with('ticket', $ticket);
     }
 
     /**
@@ -68,14 +72,16 @@ class TicketController extends Controller
      */
     public function update(Request $request, Ticket $ticket)
     {
-        $validatedData=$request->validate([
-            'title'=>'required',
-            'description'=>'required',
-            'status'=>'required',
+        $validatedData = $request->validate([
+            'title' => 'required',
+            'description' => 'required',
+            'endpoint' => 'required',
+            'status' => 'required',
         ]);
-        $ticket->title=$validatedData['title'];
-        $ticket->description=$validatedData['description'];
-        $ticket->status=$validatedData['status']; 
+        $ticket->title = $validatedData['title'];
+        $ticket->description = $validatedData['description'];
+        $ticket->endpoint = $validatedData['endpoint'];
+        $ticket->status = $validatedData['status'];
         $ticket->save();
         return redirect()->route('tickets.index');
     }
@@ -88,5 +94,31 @@ class TicketController extends Controller
         //
         $ticket->delete();
         return redirect()->route('tickets.index');
+    }
+
+     private function getDevices()
+    {
+        $accessToken = $this->getAccessToken();
+
+        $orgId = env('ACTION1_ORG_ID');
+
+        return Cache::remember('action1_devices', 300, function () use ($accessToken, $orgId) {
+            $response = Http::withToken($accessToken)
+                ->get("https://app.eu.action1.com/api/3.0/endpoints/managed/{$orgId}");
+
+            return json_decode($response->body());
+        });
+    }
+    
+    private function getAccessToken()
+    {
+        return Cache::remember('action1_token', 300, function () {
+            $response = Http::post('https://app.eu.action1.com/api/3.0/oauth2/token', [
+                'client_id' => env('ACTION1_CLIENT_ID'),
+                'client_secret' => env('ACTION1_SECRET'),
+            ]);
+
+            return $response->json()['access_token'] ?? null;
+        });
     }
 }
